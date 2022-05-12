@@ -30,8 +30,8 @@ package nhentai
 
 * ThumbsURL = url to get cover and thumb pics of doujins
 *-----------------------------------------------
-* ThumbsURL + "cover.jpg"
-* ThumbsURL + "thumb.jpg"
+* ThumbsURL + {mediaid} + "cover.jpg"
+* ThumbsURL + 1234 + "thumb.jpg"
 
 * ImageURL = url to get pages of doujins
 *-----------------------------------------------
@@ -47,25 +47,27 @@ package nhentai
 
 // Host endpoints
 const (
-	HostURL = "https://nhentai.net/api" 
-	ImageURL = "https://i.nhentai.net/galleries/"
-	ThumbsURL = "https://t.nhentayi.net/galleries/"
+	Host = "https://nhentai.net"
+	HostURL   = "https://nhentai.net/g/"
+	HostAPI   = "https://nhentai.net/api/"
+	ImageURL  = "https://i.nhentai.net/galleries/"
+	ThumbsURL = "https://t.nhentai.net/galleries/"
 
-	GalleryURL = "https://nhentai.net/api/gallery/"
-	GalleriesURL = "https://nhentai.net/api/galleries/"
+	GalleryURL   = HostAPI + "gallery/"
+	GalleriesURL = HostAPI + "galleries/"
 )
 
 // Search galleries
 const (
-	AllGalleryUrl = GalleriesURL + "all"
+	AllGalleryUrl    = GalleriesURL + "all"
 	TaggedGalleryURL = GalleriesURL + "tagged?tag_id="
 	SearchGalleryURL = GalleriesURL + "search?query="
 )
 
 // Sorting methods
 const (
-	Recent = ""
-	PopularAllTime = "popular"
+	Recent          = ""
+	PopularAllTime  = "popular"
 	PopularThisWeek = "popular-week"
-	PopularToday = "popular-today"
+	PopularToday    = "popular-today"
 )
