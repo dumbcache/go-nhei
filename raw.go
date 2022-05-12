@@ -21,7 +21,7 @@ type rawDoujinTitle struct {
 type rawDoujinImage struct {
 	Pages []rawDoujinPage `json:"pages"`
 	Cover rawDoujinPage   `json:"cover"`
-	Thumb rawDoujinPage   `json:"thumb"`
+	Thumb rawDoujinPage   `json:"thumbnail"`
 }
 
 type rawDoujinPage struct {

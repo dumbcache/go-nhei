@@ -57,8 +57,8 @@ func (d *Doujin) transformImages(images rawDoujinImage,mediaID string) {
 		page.URL = fmt.Sprintf("%s%s/%d.%s", ImageURL, mediaID,i+1,page.Extension)
 		d.Pages = append(d.Pages, *page)
 	}
-	d.Cover = fmt.Sprintf("%s%s/%s%s", ThumbsURL, mediaID, "cover",imgExtension(images.Cover.T))
-	d.Thumb = fmt.Sprintf("%s%s/%s%s", ThumbsURL, mediaID, "thumb",imgExtension(images.Thumb.T))
+	d.Cover = fmt.Sprintf("%s%s/%s%s", ThumbsURL, mediaID, "cover.",imgExtension(images.Cover.T))
+	d.Thumb = fmt.Sprintf("%s%s/%s%s", ThumbsURL, mediaID, "thumb.",imgExtension(images.Thumb.T))
 }
 
 func (d *Doujin) transformTags(tags []RawDoujinTag) {
