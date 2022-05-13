@@ -30,7 +30,6 @@ func FetchDoujin(id int) (*Doujin, error) {
 func HomePage() ([]Doujin,error){
 	
 	raw := new(RawDoujinList)
-	d := new(Doujin)
 	dlist := []Doujin{}
 	res, err := http.Get(AllGalleryUrl)
 	if err != nil {
@@ -41,6 +40,7 @@ func HomePage() ([]Doujin,error){
 	}
 	
 	for _, v := range raw.Result {
+		d := new(Doujin)
 		d.transform(&v)
 		dlist =append(dlist,*d)
 	}
