@@ -47,7 +47,7 @@ package nhentai
 
 // Host endpoints
 const (
-	Host = "https://nhentai.net"
+	Host      = "https://nhentai.net"
 	HostURL   = "https://nhentai.net/g/"
 	HostAPI   = "https://nhentai.net/api/"
 	ImageURL  = "https://i.nhentai.net/galleries/"
