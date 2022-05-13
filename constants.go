@@ -1,5 +1,7 @@
 package nhentai
 
+import "errors"
+
 /*
 
 *
@@ -71,3 +73,5 @@ const (
 	PopularThisWeek = "popular-week"
 	PopularToday    = "popular-today"
 )
+
+var fetchErr = errors.New("error while retrieving doujin")

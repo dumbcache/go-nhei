@@ -1,5 +1,9 @@
 package nhentai
 
+type RawDoujinList struct{
+	Result []RawDoujin	`json:"result"`
+}
+
 type RawDoujin struct {
 	ID         int            `json:"id"`
 	MediaID    string         `json:"media_id"`

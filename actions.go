@@ -13,7 +13,6 @@ func FetchDoujin(id int) (*Doujin, error) {
 
 	fetchURL := fmt.Sprintf("%s%d", GalleryURL, id)
 	raw := new(RawDoujin)
-	fetchErr := errors.New("error while retrieving doujin")
 	d := new(Doujin)
 
 	res, err := http.Get(fetchURL)
@@ -28,7 +27,29 @@ func FetchDoujin(id int) (*Doujin, error) {
 	return d, nil
 }
 
+func HomePage() ([]Doujin,error){
+	
+	raw := new(RawDoujinList)
+	d := new(Doujin)
+	dlist := []Doujin{}
+	res, err := http.Get(AllGalleryUrl)
+	if err != nil {
+		return nil, fetchErr
+	}
+	if err := unmarshal(raw, res); err != nil {
+		return nil, err
+	}
+	
+	for _, v := range raw.Result {
+		d.transform(&v)
+		dlist =append(dlist,*d)
+	}
+
+	return dlist, nil
+}
+
 func (d *Doujin) transform(raw *RawDoujin) {
+
 	d.transformImages(raw.Images, raw.MediaID)
 	d.transformTags(raw.Tags)
 
@@ -43,6 +64,7 @@ func (d *Doujin) transform(raw *RawDoujin) {
 }
 
 func unmarshal(i interface{}, res *http.Response) error {
+
 	data, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		return errors.New("error while unmarshallling")
@@ -53,6 +75,7 @@ func unmarshal(i interface{}, res *http.Response) error {
 }
 
 func (d *Doujin) transformImages(images rawDoujinImage, mediaID string) {
+
 	for i, v := range images.Pages {
 		page := new(DoujinPage)
 		page.Extension = imgExtension(v.T)
@@ -67,6 +90,7 @@ func (d *Doujin) transformImages(images rawDoujinImage, mediaID string) {
 }
 
 func (d *Doujin) transformTags(tags []RawDoujinTag) {
+
 	for _, v := range tags {
 		tag := new(RawDoujinTag)
 		tag.ID = v.ID
@@ -79,6 +103,7 @@ func (d *Doujin) transformTags(tags []RawDoujinTag) {
 }
 
 func imgExtension(s string) string {
+
 	switch s {
 	case "j":
 		return "jpg"
