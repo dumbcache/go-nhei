@@ -3,7 +3,7 @@ package nhentai
 import "time"
 
 type Doujin struct {
-	ID              int            `json:"id"`
+	ID              int           `json:"id"`
 	MediaID         string         `json:"mediaId"`
 	Titles          DoujinTitle    `json:"title"`
 	URL             string         `json:"url"`
@@ -11,7 +11,7 @@ type Doujin struct {
 	Thumb           string         `json:"thumb"`
 	Pages           []DoujinPage   `json:"pages"`
 	UploadDate      time.Time      `json:"uploadDate"`
-	UploadTimeStamp int            `json:"uploadTimeStamp"`
+	UploadTimeStamp int            `json:"timeStamp"`
 	Tags            []RawDoujinTag `json:"tags"`
 	PageCount       int            `json:"pageCount"`
 	Favourites      int            `json:"favourites"`
@@ -24,9 +24,9 @@ type DoujinTitle struct {
 }
 
 type DoujinPage struct {
-	Extension string `json:"extension"`
-	Width     int    `json:"width"`
-	Height    int    `json:"height"`
-	URL       string `json:"url"`
-	Number    int    `json:"number"`
+	Extension string `json:"t"`
+	Width     int    `json:"w"`
+	Height    int    `json:"h"`
+	URL       string `json:"u"`
+	Number    int    `json:"n"`
 }

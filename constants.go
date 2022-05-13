@@ -61,7 +61,7 @@ const (
 
 // Search galleries
 const (
-	AllGalleryUrl    = GalleriesURL + "all"
+	AllGalleryUrl    = GalleriesURL + "all?page="
 	TaggedGalleryURL = GalleriesURL + "tagged?tag_id="
 	SearchGalleryURL = GalleriesURL + "search?query="
 )

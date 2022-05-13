@@ -5,7 +5,7 @@ type RawDoujinList struct{
 }
 
 type RawDoujin struct {
-	ID         int            `json:"id"`
+	ID         interface{}            `json:"id"`
 	MediaID    string         `json:"media_id"`
 	Title      rawDoujinTitle `json:"title"`
 	Images     rawDoujinImage `json:"images"`

@@ -6,9 +6,12 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os"
+	"strconv"
 	"time"
 )
 
+// used to get the individual doujin by doujin id
 func FetchDoujin(id int) (*Doujin, error) {
 
 	fetchURL := fmt.Sprintf("%s%d", GalleryURL, id)
@@ -27,11 +30,15 @@ func FetchDoujin(id int) (*Doujin, error) {
 	return d, nil
 }
 
-func HomePage() ([]Doujin,error){
+// fetch the homepage, nothing but the recent 25 doujins. you can pass page number to get respective page.
+//
+// page number should be 1,2,......so on
+func HomePage(page int) ([]Doujin,error){
 	
 	raw := new(RawDoujinList)
 	dlist := []Doujin{}
-	res, err := http.Get(AllGalleryUrl)
+	fetchURL := fmt.Sprintf("%s%d",AllGalleryUrl,page)
+	res, err := http.Get(fetchURL)
 	if err != nil {
 		return nil, fetchErr
 	}
@@ -48,12 +55,18 @@ func HomePage() ([]Doujin,error){
 	return dlist, nil
 }
 
+// converting raw doujin format to Doujin format
 func (d *Doujin) transform(raw *RawDoujin) {
 
 	d.transformImages(raw.Images, raw.MediaID)
 	d.transformTags(raw.Tags)
 
-	d.ID = raw.ID
+	switch raw.ID.(type) {
+	case float64:
+		d.ID = int(raw.ID.(float64))
+	case string:
+		d.ID,_ = strconv.Atoi(raw.ID.(string))
+	}
 	d.MediaID = raw.MediaID
 	d.Titles = DoujinTitle(raw.Title)
 	d.URL = fmt.Sprintf("%s%d", HostURL, raw.ID)
@@ -70,6 +83,8 @@ func unmarshal(i interface{}, res *http.Response) error {
 		return errors.New("error while unmarshallling")
 	}
 	defer res.Body.Close()
+	file, _ := os.Create("data.json")
+		file.Write(data)
 	json.Unmarshal(data, i)
 	return nil
 }
