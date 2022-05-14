@@ -72,7 +72,7 @@ func FetchPopular(page int) ([]Doujin, error) {
 // page number should be 1,2,......so on
 //
 // you can pass below sort options to sort accordingly
-//Recent          = ""
+//Recent          = "" (default)
 //PopularAllTime  = "popular"
 //PopularThisWeek = "popular-week"
 //PopularToday    = "popular-today"

@@ -20,7 +20,7 @@ import "errors"
 * GAllGalleryUrl
 * GalleryURL + "&page=2"
 
-* SearchGalleryURL = Get doujins by tagid
+* SearchGalleryURL = Get doujins by query
 ------------------------------------------------
 * SearchGalleryURL + "konosuba"
 * SearchGalleryURL + "konosuba&page=3&sort=popular"
@@ -73,6 +73,8 @@ const (
 	PopularThisWeek = "popular-week"
 	PopularToday    = "popular-today"
 )
+
+var TagTypes = []string{"artist","category","character","group","language","parody","tag"}
 
 var fetchErr = errors.New("error while retrieving doujin")
 
