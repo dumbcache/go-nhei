@@ -55,35 +55,34 @@ func HomePage(page int) ([]Doujin, error) {
 	err := fetch(fetchURL, raw)
 	dlist := raw.transform()
 	return dlist, err
-	
+
 }
 func FetchPopular(page int) ([]Doujin, error) {
 
-	fetchURL := fmt.Sprintf("%s*&page=%d&sort=%s", SearchGalleryURL, page,PopularAllTime)
+	fetchURL := fmt.Sprintf("%s*&page=%d&sort=%s", SearchGalleryURL, page, PopularAllTime)
 	raw := new(RawDoujinList)
 	err := fetch(fetchURL, raw)
 	dlist := raw.transform()
 	return dlist, err
-	
+
 }
 
-func FetchRandom() (*Doujin,error){
-
+func FetchRandom() (*Doujin, error) {
 
 	client := new(http.Client)
-	req,err := http.NewRequest(http.MethodHead,RandomURL,nil)
-	if err!= nil{
-		return nil,ErrFormat("inside fetchRandom",err)
+	req, err := http.NewRequest(http.MethodHead, RandomURL, nil)
+	if err != nil {
+		return nil, ErrFormat("inside fetchRandom", err)
 	}
-	res,err := client.Do(req)
-	
-	if err!= nil{
-		return nil,ErrFormat("inside fetchRandom",err)
+	res, err := client.Do(req)
+
+	if err != nil {
+		return nil, ErrFormat("inside fetchRandom", err)
 	}
-	newUrl := strings.Trim(res.Request.URL.Path,"g/")
-	id,_ := strconv.Atoi(newUrl)
-	d,err := FetchDoujin(id)
-	return d,err
+	newUrl := strings.Trim(res.Request.URL.Path, "g/")
+	id, _ := strconv.Atoi(newUrl)
+	d, err := FetchDoujin(id)
+	return d, err
 }
 
 // get the doujin by a string value provided.
@@ -96,14 +95,14 @@ func FetchRandom() (*Doujin,error){
 //PopularAllTime  = "popular"
 //PopularThisWeek = "popular-week"
 //PopularToday    = "popular-today"
-func Search(query string,page int,sort string) ([]Doujin, error) {
+func Search(query string, page int, sort string) ([]Doujin, error) {
 
-	fetchURL := fmt.Sprintf("%s%s&page=%d&sort=%s", SearchGalleryURL,query, page,PopularAllTime)
+	fetchURL := fmt.Sprintf("%s%s&page=%d&sort=%s", SearchGalleryURL, query, page, PopularAllTime)
 	raw := new(RawDoujinList)
 	err := fetch(fetchURL, raw)
 	dlist := raw.transform()
 	return dlist, err
-	
+
 }
 
 // converting raw doujin format to Doujin format
@@ -116,6 +115,7 @@ func (d *Doujin) transform(raw *RawDoujin) {
 	case float64:
 		d.ID = int(raw.ID.(float64))
 	case string:
+		res.Request.URL
 		d.ID, _ = strconv.Atoi(raw.ID.(string))
 	}
 	d.MediaID = raw.MediaID
@@ -141,7 +141,7 @@ func unmarshal(i interface{}, res *http.Response) error {
 
 	data, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		return ErrFormat("inside unmarshal",err)
+		return ErrFormat("inside unmarshal", err)
 	}
 	defer res.Body.Close()
 	file, _ := os.Create("data.json")
@@ -191,14 +191,14 @@ func imgExtension(s string) string {
 	return ""
 }
 
-func ErrFormat(head string,body error) error{
-	return fmt.Errorf("%s\n---->\t%s%s%s: %w...%s\n--------------------------------",Green,Red,head,Yellow,body,Reset)
+func ErrFormat(head string, body error) error {
+	return fmt.Errorf("%s\n---->\t%s%s%s: %w...%s\n--------------------------------", Green, Red, head, Yellow, body, Reset)
 }
 
-func(d *Doujin) FilterTags(name string)[]RawDoujinTag{
+func (d *Doujin) FilterTags(name string) []RawDoujinTag {
 	filtered := []RawDoujinTag{}
 	for _, v := range d.Tags {
-		if v.Type == name{
+		if v.Type == name {
 			filtered = append(filtered, v)
 		}
 	}

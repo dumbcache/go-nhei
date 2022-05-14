@@ -64,7 +64,7 @@ const (
 	AllGalleryURL    = GalleriesURL + "all?page="
 	TaggedGalleryURL = GalleriesURL + "tagged?tag_id="
 	SearchGalleryURL = GalleriesURL + "search?query="
-	RandomURL = Host + "random"
+	RandomURL        = Host + "random"
 )
 
 // Sorting methods
@@ -75,11 +75,11 @@ const (
 	PopularToday    = "popular-today"
 )
 
-var TagTypes = []string{"artist","category","character","group","language","parody","tag"}
+var TagTypes = []string{"artist", "category", "character", "group", "language", "parody", "tag"}
 
 var fetchErr = errors.New("error while retrieving doujin")
 
-var Reset  = "\033[0m"
-var Red    = "\033[31m"
-var Green  = "\033[32m"
+var Reset = "\033[0m"
+var Red = "\033[31m"
+var Green = "\033[32m"
 var Yellow = "\033[33m"
