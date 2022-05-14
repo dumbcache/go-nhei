@@ -69,10 +69,9 @@ const (
 
 // Sorting methods
 const (
-	Recent          = ""
-	PopularAllTime  = "popular"
-	PopularThisWeek = "popular-week"
-	PopularToday    = "popular-today"
+	PopularAllTime  = "sort=popular"
+	PopularThisWeek = "sort=popular-week"
+	PopularToday    = "sort=popular-today"
 )
 
 var TagTypes = []string{"artist", "category", "character", "group", "language", "parody", "tag"}

@@ -67,6 +67,8 @@ func FetchPopular(page int) ([]Doujin, error) {
 
 }
 
+
+
 func FetchRandom() (*Doujin, error) {
 
 	client := new(http.Client)
@@ -97,7 +99,17 @@ func FetchRandom() (*Doujin, error) {
 //PopularToday    = "popular-today"
 func Search(query string, page int, sort string) ([]Doujin, error) {
 
-	fetchURL := fmt.Sprintf("%s%s&page=%d&sort=%s", SearchGalleryURL, query, page, PopularAllTime)
+	fetchURL := fmt.Sprintf("%s%s&page=%d&%s", SearchGalleryURL, query, page, sort)
+	raw := new(RawDoujinList)
+	err := fetch(fetchURL, raw)
+	dlist := raw.transform()
+	return dlist, err
+
+}
+
+func SearchByTagID(id int, page int, sort string) ([]Doujin, error) {
+
+	fetchURL := fmt.Sprintf("%s%d&page=%d&%s", TaggedGalleryURL, id, page, sort)
 	raw := new(RawDoujinList)
 	err := fetch(fetchURL, raw)
 	dlist := raw.transform()
@@ -115,7 +127,6 @@ func (d *Doujin) transform(raw *RawDoujin) {
 	case float64:
 		d.ID = int(raw.ID.(float64))
 	case string:
-		res.Request.URL
 		d.ID, _ = strconv.Atoi(raw.ID.(string))
 	}
 	d.MediaID = raw.MediaID
