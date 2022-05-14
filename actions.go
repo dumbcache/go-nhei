@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -49,7 +50,7 @@ func RelatedDoujin(id int) ([]Doujin, error) {
 // page number should be 1,2,......so on
 func HomePage(page int) ([]Doujin, error) {
 
-	fetchURL := fmt.Sprintf("%s%d", AllGalleryUrl, page)
+	fetchURL := fmt.Sprintf("%s%d", AllGalleryURL, page)
 	raw := new(RawDoujinList)
 	err := fetch(fetchURL, raw)
 	dlist := raw.transform()
@@ -64,6 +65,25 @@ func FetchPopular(page int) ([]Doujin, error) {
 	dlist := raw.transform()
 	return dlist, err
 	
+}
+
+func FetchRandom() (*Doujin,error){
+
+
+	client := new(http.Client)
+	req,err := http.NewRequest(http.MethodHead,RandomURL,nil)
+	if err!= nil{
+		return nil,ErrFormat("inside fetchRandom",err)
+	}
+	res,err := client.Do(req)
+	
+	if err!= nil{
+		return nil,ErrFormat("inside fetchRandom",err)
+	}
+	newUrl := strings.Trim(res.Request.URL.Path,"g/")
+	id,_ := strconv.Atoi(newUrl)
+	d,err := FetchDoujin(id)
+	return d,err
 }
 
 // get the doujin by a string value provided.

@@ -49,7 +49,7 @@ import "errors"
 
 // Host endpoints
 const (
-	Host      = "https://nhentai.net"
+	Host      = "https://nhentai.net/"
 	HostURL   = "https://nhentai.net/g/"
 	HostAPI   = "https://nhentai.net/api/"
 	ImageURL  = "https://i.nhentai.net/galleries/"
@@ -61,9 +61,10 @@ const (
 
 // Search galleries
 const (
-	AllGalleryUrl    = GalleriesURL + "all?page="
+	AllGalleryURL    = GalleriesURL + "all?page="
 	TaggedGalleryURL = GalleriesURL + "tagged?tag_id="
 	SearchGalleryURL = GalleriesURL + "search?query="
+	RandomURL = Host + "random"
 )
 
 // Sorting methods
