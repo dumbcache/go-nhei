@@ -174,3 +174,13 @@ func imgExtension(s string) string {
 func ErrFormat(head string,body error) error{
 	return fmt.Errorf("%s\n---->\t%s%s%s: %w...%s\n--------------------------------",Green,Red,head,Yellow,body,Reset)
 }
+
+func(d *Doujin) FilterTags(name string)[]RawDoujinTag{
+	filtered := []RawDoujinTag{}
+	for _, v := range d.Tags {
+		if v.Type == name{
+			filtered = append(filtered, v)
+		}
+	}
+	return filtered
+}
