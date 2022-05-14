@@ -3,7 +3,7 @@ package nhentai
 import "time"
 
 type Doujin struct {
-	ID              int           `json:"id"`
+	ID              int            `json:"id"`
 	MediaID         string         `json:"mediaId"`
 	Titles          DoujinTitle    `json:"title"`
 	URL             string         `json:"url"`

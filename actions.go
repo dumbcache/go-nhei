@@ -2,14 +2,28 @@ package nhentai
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"os"
 	"strconv"
 	"time"
 )
+
+func fetch(url string, raw interface{}) error {
+
+	log.Println(url)
+
+	res, err := http.Get(url)
+	if err != nil {
+		return fetchErr
+	}
+	if err := unmarshal(raw, res); err != nil {
+		return err
+	}
+	return nil
+}
 
 // used to get the individual doujin by doujin id
 func FetchDoujin(id int) (*Doujin, error) {
@@ -17,42 +31,59 @@ func FetchDoujin(id int) (*Doujin, error) {
 	fetchURL := fmt.Sprintf("%s%d", GalleryURL, id)
 	raw := new(RawDoujin)
 	d := new(Doujin)
-
-	res, err := http.Get(fetchURL)
-	if err != nil {
-		return nil, fetchErr
-	}
-	if err := unmarshal(raw, res); err != nil {
-		return nil, err
-	}
+	err := fetch(fetchURL, raw)
 	d.transform(raw)
+	return d, err
+}
 
-	return d, nil
+func RelatedDoujin(id int) ([]Doujin, error) {
+	fetchURL := fmt.Sprintf("%s%d/related", GalleryURL, id)
+	raw := new(RawDoujinList)
+	err := fetch(fetchURL, raw)
+	dlist := raw.transform()
+	return dlist, err
 }
 
 // fetch the homepage, nothing but the recent 25 doujins. you can pass page number to get respective page.
 //
 // page number should be 1,2,......so on
-func HomePage(page int) ([]Doujin,error){
-	
-	raw := new(RawDoujinList)
-	dlist := []Doujin{}
-	fetchURL := fmt.Sprintf("%s%d",AllGalleryUrl,page)
-	res, err := http.Get(fetchURL)
-	if err != nil {
-		return nil, fetchErr
-	}
-	if err := unmarshal(raw, res); err != nil {
-		return nil, err
-	}
-	
-	for _, v := range raw.Result {
-		d := new(Doujin)
-		d.transform(&v)
-		dlist =append(dlist,*d)
-	}
+func HomePage(page int) ([]Doujin, error) {
 
-	return dlist, nil
+	fetchURL := fmt.Sprintf("%s%d", AllGalleryUrl, page)
+	raw := new(RawDoujinList)
+	err := fetch(fetchURL, raw)
+	dlist := raw.transform()
+	return dlist, err
+	
+}
+func FetchPopular(page int) ([]Doujin, error) {
+
+	fetchURL := fmt.Sprintf("%s*&page=%d&sort=%s", SearchGalleryURL, page,PopularAllTime)
+	raw := new(RawDoujinList)
+	err := fetch(fetchURL, raw)
+	dlist := raw.transform()
+	return dlist, err
+	
+}
+
+// get the doujin by a string value provided.
+// you can pass page number to get respective page.
+//
+// page number should be 1,2,......so on
+//
+// you can pass below sort options to sort accordingly
+//Recent          = ""
+//PopularAllTime  = "popular"
+//PopularThisWeek = "popular-week"
+//PopularToday    = "popular-today"
+func Search(query string,page int,sort string) ([]Doujin, error) {
+
+	fetchURL := fmt.Sprintf("%s%s&page=%d&sort=%s", SearchGalleryURL,query, page,PopularAllTime)
+	raw := new(RawDoujinList)
+	err := fetch(fetchURL, raw)
+	dlist := raw.transform()
+	return dlist, err
+	
 }
 
 // converting raw doujin format to Doujin format
@@ -65,26 +96,36 @@ func (d *Doujin) transform(raw *RawDoujin) {
 	case float64:
 		d.ID = int(raw.ID.(float64))
 	case string:
-		d.ID,_ = strconv.Atoi(raw.ID.(string))
+		d.ID, _ = strconv.Atoi(raw.ID.(string))
 	}
 	d.MediaID = raw.MediaID
 	d.Titles = DoujinTitle(raw.Title)
-	d.URL = fmt.Sprintf("%s%d", HostURL, raw.ID)
+	d.URL = fmt.Sprintf("%s%d", HostURL, d.ID)
 	d.UploadDate = time.Unix(int64(raw.UploadDate), 0)
 	d.UploadTimeStamp = raw.UploadDate
 	d.PageCount = raw.PageCount
 	d.Favourites = raw.Favourites
 }
 
+func (raw *RawDoujinList) transform() []Doujin {
+	dlist := []Doujin{}
+	for _, v := range raw.Result {
+		d := new(Doujin)
+		d.transform(&v)
+		dlist = append(dlist, *d)
+	}
+	return dlist
+}
+
 func unmarshal(i interface{}, res *http.Response) error {
 
 	data, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		return errors.New("error while unmarshallling")
+		return ErrFormat("inside unmarshal",err)
 	}
 	defer res.Body.Close()
 	file, _ := os.Create("data.json")
-		file.Write(data)
+	file.Write(data)
 	json.Unmarshal(data, i)
 	return nil
 }
@@ -128,4 +169,8 @@ func imgExtension(s string) string {
 		return "gif"
 	}
 	return ""
+}
+
+func ErrFormat(head string,body error) error{
+	return fmt.Errorf("%s\n---->\t%s%s%s: %w...%s\n--------------------------------",Green,Red,head,Yellow,body,Reset)
 }
