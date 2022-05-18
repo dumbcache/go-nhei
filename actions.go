@@ -107,6 +107,7 @@ func Search(query string, page int, sort string) ([]Doujin, error) {
 
 }
 
+// search doujin by tag id. Each tag is mapped with unique id.
 func SearchByTagID(id int, page int, sort string) ([]Doujin, error) {
 
 	fetchURL := fmt.Sprintf("%s%d&page=%d&%s", TaggedGalleryURL, id, page, sort)
@@ -138,6 +139,7 @@ func (d *Doujin) transform(raw *RawDoujin) {
 	d.Favourites = raw.Favourites
 }
 
+// transforming from raw doujin format returned from server
 func (raw *RawDoujinList) transform() []Doujin {
 	dlist := []Doujin{}
 	for _, v := range raw.Result {
