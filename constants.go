@@ -67,7 +67,6 @@ const (
 	RandomURL        = Host + "random"
 )
 
-// Sorting methods
 const (
 	PopularAllTime  = "sort=popular"
 	PopularThisWeek = "sort=popular-week"
