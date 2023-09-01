@@ -1,2 +1,2 @@
 # go-nhei
-A Go package for working with an api providing japanese doujins
+A Golang layer to the API providing japanese doujins.(No longer works as the API is disabled.)
